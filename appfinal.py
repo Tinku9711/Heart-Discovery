@@ -1,3 +1,4 @@
+#imports 
 import pandas as pd
 import json
 from pymongo import MongoClient
@@ -6,6 +7,7 @@ from flask import Flask, request
 app = Flask(__name__)
 import pickle
 
+#connection with MongoDB Database
 client = MongoClient("mongodb+srv://shash800:thisisapassword@users.wfsvr.mongodb.net/<dbname>?retryWrites=true&w=majority")
 
 db = client.get_database("users")
@@ -17,12 +19,16 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(o, ObjectId):
             return str(o)
         return json.JSONEncoder.default(self, o)
-
+    
+    
+#function to classify user as high mortality or low mortality
 classifies = pickle.load(open("modelfinal.pickle", "rb"))
 def classify(x):
     return classifies.predict([x])[0]
 
+#register
 def register(username, password):
+ 
     a = k.find_one({"username":username})
 
     if a == None:
@@ -30,8 +36,11 @@ def register(username, password):
         k.insert_one(y)
         return {"status":"success"}
     else:
+        #no duplicate usernames
         return {"status":"failed"}
 
+    
+#user adds or updates health data
 def add_update_data(username, password, age, anaemia, creatinine, diabetes, ejectionfrac, highbp, platlet, serum_creatinine, serum_sodium, sex, smoking):
         a = k.find_one({"username":username})
 
@@ -55,6 +64,8 @@ def add_update_data(username, password, age, anaemia, creatinine, diabetes, ejec
             else:
                 return {"status":"failed"}
 
+            
+#login system
 def login(username, password):
     a = k.find_one({"username":username})
     
@@ -63,11 +74,14 @@ def login(username, password):
         return {"status":"failed"}
     else:
         if a["username"] == username and a["password"] == password:
+            #can login
             return {"status":"success"}
         else:
+            #can't login
             return {"status":"failed"}
 
 
+#tips 
 def tips(age, anaemia, creatinine, diabetes, ejectionfrac, highbp, platlet, serum_creatinine, serum_sodium, sex, smoking):
     if classify([age, anaemia, creatinine, diabetes, ejectionfrac, highbp, platlet, serum_creatinine, serum_sodium, sex, smoking]) == 1:
         s = ""
@@ -86,11 +100,12 @@ def tips(age, anaemia, creatinine, diabetes, ejectionfrac, highbp, platlet, seru
         return("Your mortality risk is low!")
 
 
+#get requests
 @app.route('/register', methods=["GET", "POST"])
 def register_endpoint():
     data = request.json
 
-    return register(data["username"], data["password"])
+    return JSONEncoder().encode(register(data["username"], data["password"]))
 
 @app.route('/login', methods=["GET", "POST"])
 def login_endpoint():
@@ -102,17 +117,16 @@ def login_endpoint():
 @app.route('/add_update_data', methods=["GET", "POST"])
 def add_update_data_endpoint():
     data = request.json
+
     return add_update_data(data["username"], data["password"], data["age"], data["anaemia"], data["creatinine"], data["diabetes"], data["ejectionfrac"], data["highbp"], data["platlet"], data["serum_creatinine"], data["serum_sodium"], data["sex"], data["smoking"])
-    
 
 
 @app.route('/tips', methods=["GET", "POST"])
 def tips_endpoint():
-    data = request.json 
+    data = request.json
 
-    return(tips(data["age"], data["anaemia"], data["creatinine"], data["diabetes"], data["ejectionfrac"], data["highbp"], data["platlet"], data["serum_creatinine"], data["serum_sodium"], data["sex"], data["smoking"]))
+    return JSONEncoder().encode(tips(data["age"], data["anaemia"], data["creatinine"], data["diabetes"], data["ejectionfrac"], data["highbp"], data["platlet"], data["serum_creatinine"], data["serum_sodium"], data["sex"], data["smoking"]))
 
 
 if __name__ == "__main__":
     app.run()
-
