@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+
+html {
+  background-image: url('https://goop.com/app/uploads/2020/03/support.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.button {
+  background-color: #2699FB;
+  width: 15%;
+  height: 9%;
+  border-radius: 35px;
+}
+
+#words {
+  font-weight: 900;
+  font-size: 20px;
+  font-family: sans-serif;
+  color: white;
+}
+
+#login {
+  position: absolute;
+  left: 30%;
+  top: 30%;
+}
+
+#signup {
+  position: absolute;
+  left: 55%;
+  top: 30%;
+}
+
+#link {
+  text-decoration: none;
+  color: white;
+}
+
+#link:hover {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.signup-form {
+  position: absolute;
+  left: 55%;
+  top: 50%;
+  z-index: 20;
+  color: grey;
+}
+
+.form {
+  font-weight: 900;
+  color: black;
+}
+
+.submit-button {
+  border-radius: 30px;
+  color: white;
+  font-weight: 900;
+  background-color:#2699FB;
+}
+
+.form-box {
+  z-index: 10;
+  border-color: black;
+  border-radius: 10px;
+  position: absolute;
+  left: 45%;
+  top: 30%;
+}
+
+input {
+  border-radius: 20px;
+}
+
+body{
+  padding: 40px;
+  background-color: #121212;
+  border-radius: 50px;
+  opacity: 90%;
+}
+
+#parent {
+  height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 28px;
+  color: rgba(255,255,255,.70);
+  position: relative;
+}
+
+#border {
+  border-bottom: solid 3px rgba(0,255,0,.75);
+  position: absolute;
+  right: -7px;
+  width: 20px;
+  border-radius: 30px;
+}
+
+/* Animation */
+#parent {
+  animation: animated-text 2s steps(30,end) 1s 1 normal both;
+  width: 100;
+  left: 20%;
+}
+
+#border {
+   animation: animated-cursor 600ms steps(30,end) infinite;
+   border-radius: 30px;
+}
+
+/* text animation */
+
+@keyframes animated-text{
+  from{width: 0;}
+  to{width: 750px;}
+}
+
+/* cursor animations */
+
+@keyframes animated-cursor{
+  from{border-bottom-color: rgba(0,255,0,.75);}
+  to{border-bottom-color: transparent;}
+}
+
+#logo {
+  left: 35%;
+  font-weight: 900;
+  text-align: center;
+  color: white;
+}
